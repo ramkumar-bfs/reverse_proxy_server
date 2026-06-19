@@ -1,0 +1,9 @@
+[project]
+name = "BFS_REVERSE_PROXY_SERVER"
+version = "1.0.0"
+
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic-settings"
+]
