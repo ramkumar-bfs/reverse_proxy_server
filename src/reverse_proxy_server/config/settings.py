@@ -9,4 +9,4 @@ class ReverseProxySettings(BaseSettings):
     """"""
     application_name: str = CONSTANTS.APP_TITLE
     version: str = CONSTANTS.APP_VERSION
-    upstream_api_mapper = CONSTANTS.UPSTREAM_API_MAPPER
+    upstream_api_mapper: dict = CONSTANTS.UPSTREAM_API_MAPPER
