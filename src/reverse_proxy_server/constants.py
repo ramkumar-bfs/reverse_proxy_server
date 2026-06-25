@@ -36,6 +36,9 @@ UPSTREAM_API_MAPPER = {
     "google": "https://www.google.com"
     }
 
+# Production Tracker Config
+PRODUCTION_TRACKER_API_METHODS = ["CREATE", "GET", "POST", "PATCH", "DELETE"]
+PRODUCTION_TRACKER_RATE_LIMIT_PER_MINUTE = 100 # per Client 
 ###############################################################
 
 # FASTAPI CONSTANTS

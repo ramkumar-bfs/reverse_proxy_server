@@ -4,6 +4,7 @@ from reverse_proxy_server import constants as CONSTANTS
 from reverse_proxy_server.utils import get_proxy_url
 
 # 3rd-Party Imports
+from pydantic import model_validator
 from pydantic_settings import BaseSettings
 
 class ReverseProxySettings(BaseSettings):
@@ -27,3 +28,16 @@ class ReverseProxySettings(BaseSettings):
 
     proxy_url: str | None = get_proxy_url()
 
+# Production-Tracker Configuration
+class ProductionTrackerSettings(ReverseProxySettings):
+    """"""
+    supported_api_methods: list = CONSTANTS.PRODUCTION_TRACKER_API_METHODS
+    rate_limit_per_minute : int = CONSTANTS.PRODUCTION_TRACKER_RATE_LIMIT_PER_MINUTE
+    upstream_url : str | None  = None
+
+    # 2. Automatically compute the value right after validation
+    @model_validator(mode="after")
+    def set_upstream_url(self):
+        if self.upstream_api_mapper and "production-tracker" in self.upstream_api_mapper:
+            self.upstream_url = self.upstream_api_mapper.get("production-tracker")
+        return self

@@ -5,9 +5,10 @@ import logging
 # Local Import
 from .middleware import RequestIDMiddleware, AccessLogMiddleware
 from .config import ReverseProxySettings
-from .api.routes import REVERSE_PROXY_ROUTES
+from .api import ROUTES
 from .life_span import config_application_lifespan
 # 3rd-Party Imports
+
 from fastapi import FastAPI
 
 # MODULE CONSTANTS
@@ -28,5 +29,6 @@ app.add_middleware(RequestIDMiddleware)
 app.add_middleware(AccessLogMiddleware)
 
 # Include API Routes
-app.include_router(*REVERSE_PROXY_ROUTES)
+for route in ROUTES:
+    app.include_router(route)
 
