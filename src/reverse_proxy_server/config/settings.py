@@ -34,6 +34,7 @@ class ReverseProxySettings(BaseSettings):
 # Production-Tracker Configuration
 class ProductionTrackerSettings(ReverseProxySettings):
     """"""
+    application_name: str= CONSTANTS.PRODUCTION_TRACKER_SUBDOMAIN
     supported_api_methods: list = CONSTANTS.PRODUCTION_TRACKER_API_METHODS
     rate_limit_per_minute : int = CONSTANTS.PRODUCTION_TRACKER_RATE_LIMIT_PER_MINUTE
     upstream_url : str | None  = None
