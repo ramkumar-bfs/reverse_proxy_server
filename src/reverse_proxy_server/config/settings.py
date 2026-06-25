@@ -31,6 +31,9 @@ class ReverseProxySettings(BaseSettings):
     # Proxy self-auth: if set, clients must send this value in X-Proxy-Api-Key.
     proxy_api_key: str = ""
 
+    # Base domain sites are mounted under, as "<subdomain>.<proxy_base_domain>".
+    proxy_base_domain: str = CONSTANTS.DEFAULT_PROXY_BASE_DOMAIN
+
 # Production-Tracker Configuration
 class ProductionTrackerSettings(ReverseProxySettings):
     """"""
@@ -52,6 +55,6 @@ class ProductionTrackerSettings(ReverseProxySettings):
     # 2. Automatically compute the value right after validation
     @model_validator(mode="after")
     def set_upstream_url(self):
-        if self.upstream_api_mapper and "production-tracker" in self.upstream_api_mapper:
-            self.upstream_url = self.upstream_api_mapper.get("production-tracker")
+        if self.upstream_api_mapper and CONSTANTS.PRODUCTION_TRACKER_SUBDOMAIN in self.upstream_api_mapper:
+            self.upstream_url = self.upstream_api_mapper.get(CONSTANTS.PRODUCTION_TRACKER_SUBDOMAIN)
         return self

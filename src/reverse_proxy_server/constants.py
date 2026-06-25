@@ -54,6 +54,14 @@ REVERSE_PROXY_MODE="REVERSE_PROXY_MODE"
 PROXY_URL = "PROXY_URL"
 ###########################################################
 
+# SITE (SUBDOMAIN) ROUTING CONSTANTS
+# Each site is mounted under "<subdomain>.<PROXY_BASE_DOMAIN>" on the same port,
+# rather than a path prefix, so upstream apps that emit root-absolute asset
+# paths (e.g. ShotGrid's /dist/...) resolve correctly through the proxy.
+DEFAULT_PROXY_BASE_DOMAIN = "localhost"
+PRODUCTION_TRACKER_SUBDOMAIN = "production-tracker"
+###########################################################
+
 # LOGGING CONSTANTS
 LOGGING_MSG_FORMAT = "%(asctime)s %(levelname)-8s %(name)s — %(message)s"
 LOGGING_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"

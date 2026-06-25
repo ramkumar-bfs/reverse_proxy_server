@@ -19,7 +19,7 @@ import shotgun_api3
 
 # ── ShotGrid server URL ───────────────────────────────────────────────────────
 # Direct address of the ShotGrid server accessible via the firewall.
-SG_URL = "http://localhost:8080/production-tracker/"  # Trailing slash required: shotgun_api3 builds its RPC path via urljoin, which drops the last path segment if it isn't slash-terminated.
+SG_URL = "http://production-tracker.localhost:8080/"  # Must match the proxy's Host()-based mount (production-tracker.<PROXY_BASE_DOMAIN>, default "localhost"). Trailing slash required for shotgun_api3's urljoin-based path building.
 
 # ── Credentials (from environment) ───────────────────────────────────────────
 SCRIPT_NAME = os.getenv("SG_SCRIPT_NAME")
