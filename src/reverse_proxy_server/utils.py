@@ -15,7 +15,9 @@ def _get_env(env_name, required=False):
         raise ValueError(f"Environment variable '{env_name}' is required but not set.")
     return value
 
-
+def get_proxy_url():
+    """"""
+    return _get_env(CONSTANTS.PROXY_URL)
 def get_host():
     """"""
     return _get_env(CONSTANTS.HOST, required=True)

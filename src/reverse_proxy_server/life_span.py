@@ -5,13 +5,16 @@ import logging
 from contextlib import asynccontextmanager
 import httpx
 
+# Local imports
+from . config.settings import ReverseProxySettings
 LOGGER = logging.getLogger(__name__)
 
 
 # Reverse Proxy Server  LifeSpan Configuration
 @asynccontextmanager
-async def config_application_lifespan(app, settings):
+async def config_application_lifespan(app, settings: ReverseProxySettings):
     """"""
+     
     # Application Limit
     limits = httpx.Limits(
         max_connections=settings.max_connections,
@@ -20,13 +23,13 @@ async def config_application_lifespan(app, settings):
     )
     # APPlication Timeout
     timeout = httpx.Timeout(
-        connect=settings.connect_timeout,
+        connect=settings.connection_timeout,
         read=settings.read_timeout,
         write=settings.write_timeout,
         pool=settings.pool_timeout,
     )
     # Proxy Resolution: Explicit setting wins, then fall back to HTTP_PROXY / HTTPS_PROXY env vars. Normalize scheme in both cases so a bare "host:port" value (common in launch scripts) doesn't crash httpx.
-    effective_proxy = settings.outbound_proxy
+    effective_proxy = settings.proxy_url
     if effective_proxy and not effective_proxy.startswith(("http://", "https://")):
         effective_proxy = f"http://{effective_proxy}"
 
@@ -47,7 +50,7 @@ async def config_application_lifespan(app, settings):
         "Pool: max=%d keepalive=%d  |  Timeouts: connect=%.0fs read=%.0fs",
         settings.max_connections,
         settings.max_keepalive_connections,
-        settings.connect_timeout,
+        settings.connection_timeout,
         settings.read_timeout,
     )
 
