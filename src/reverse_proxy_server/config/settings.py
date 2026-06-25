@@ -28,12 +28,26 @@ class ReverseProxySettings(BaseSettings):
 
     proxy_url: str | None = get_proxy_url()
 
+    # Proxy self-auth: if set, clients must send this value in X-Proxy-Api-Key.
+    proxy_api_key: str = ""
+
 # Production-Tracker Configuration
 class ProductionTrackerSettings(ReverseProxySettings):
     """"""
     supported_api_methods: list = CONSTANTS.PRODUCTION_TRACKER_API_METHODS
     rate_limit_per_minute : int = CONSTANTS.PRODUCTION_TRACKER_RATE_LIMIT_PER_MINUTE
     upstream_url : str | None  = None
+    
+    max_body_bytes: int = CONSTANTS.MAX_BODY_BYTES
+    max_retries: int = CONSTANTS.MAX_RETRIES
+    retry_min_wait: float = CONSTANTS.RETRY_MIN_WAIT
+    retry_max_wait: float = CONSTANTS.RETRY_MAX_WAIT
+
+    # Upstream auth injected into every outbound request to this site. Use ONE of these.
+    upstream_authorization: str = ""
+    upstream_cookie: str = ""
+    upstream_api_key_header: str = ""
+    upstream_api_key_value: str = ""
 
     # 2. Automatically compute the value right after validation
     @model_validator(mode="after")

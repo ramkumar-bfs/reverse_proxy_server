@@ -32,7 +32,7 @@ MAX_BODY_BYTES=536870912 # 512MB
 
 # UPSTREAM SETTINGS
 UPSTREAM_API_MAPPER = {
-    "production-tracker": "https://production-tracker.example.com",
+    "production-tracker": "https://basilic.shotgrid.autodesk.com",
     "google": "https://www.google.com"
     }
 

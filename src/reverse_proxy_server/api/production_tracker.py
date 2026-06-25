@@ -20,4 +20,4 @@ _APPLICATION_LIMITER = Limiter(key_func=get_remote_address)
 @_APPLICATION_LIMITER.limit(f"{_APPLICATION_SETTINGS.rate_limit_per_minute}/minute")
 async def production_tracker(request: Request, full_path: str =""):
     """"""
-    return query_upstream(request, full_path,  _APPLICATION_SETTINGS)
+    return await query_upstream(full_path, request, _APPLICATION_SETTINGS)
