@@ -4,7 +4,7 @@ import os
 from logging.config import dictConfig
 
 # Local imports
-from .logging import LOGGING_CONFIG
+from .config.logging import LOGGING_CONFIG
 from . import constants as CONSTANTS
 
 # MODULE Support Functions
