@@ -3,7 +3,8 @@
 import logging
 
 # Local Import
-from .config.settings import ReverseProxySettings
+from .middleware import RequestIDMiddleware, AccessLogMiddleware
+from .config import ReverseProxySettings
 from .api.routes import REVERSE_PROXY_ROUTES
 from .life_span import config_application_lifespan
 # 3rd-Party Imports
@@ -22,5 +23,10 @@ app = FastAPI(
     lifespan=lambda app: config_application_lifespan(app, _APPLICATION_SETTINGS)
 )
 
+# Add MiddleWare to Application
+app.add_middleware(RequestIDMiddleware)
+app.add_middleware(AccessLogMiddleware)
+
 # Include API Routes
 app.include_router(*REVERSE_PROXY_ROUTES)
+

@@ -1,10 +1,8 @@
 """"""
 # Default Imports
 import os
-from logging.config import dictConfig
 
-# Local imports
-from .config.logging import LOGGING_CONFIG
+# Local Imports
 from . import constants as CONSTANTS
 
 # MODULE Support Functions
@@ -35,7 +33,3 @@ def hot_reload():
     mode = _get_env(CONSTANTS.REVERSE_PROXY_MODE)
     return True if mode == CONSTANTS.DEFAULT_MODE else False
 
-def config_logger():
-    """"""
-    # Setup reverse proxy server logger
-    dictConfig(LOGGING_CONFIG)
