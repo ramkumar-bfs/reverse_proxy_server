@@ -10,6 +10,7 @@
             "request": "launch",
             "module": "reverse_proxy_server",
             "envFile": "${workspaceFolder}/.env",
+            "console": "integratedTerminal",
             "justMyCode": false
         },
         {

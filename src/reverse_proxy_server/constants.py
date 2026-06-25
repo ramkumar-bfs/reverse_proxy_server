@@ -9,7 +9,7 @@ DEFAULT_MODE = "development"
 # Reverse Proxy Configuration settings
 # TODO: Convert the configuration to yaml file
 # TIMEOUTS SETTINGS
-CONNECT_TIMEOUT=10
+CONNECT_TIMEOUT=300
 READ_TIMEOUT=60
 WRITE_TIMEOUT=30
 POOL_TIMEOUT=10
@@ -52,6 +52,14 @@ PORT= "REVERSE_PROXY_PORT"
 MAX_WORKERS="REVERSE_PROXY_MAX_WORKERS"
 REVERSE_PROXY_MODE="REVERSE_PROXY_MODE"
 PROXY_URL = "PROXY_URL"
+###########################################################
+
+# SITE (SUBDOMAIN) ROUTING CONSTANTS
+# Each site is mounted under "<subdomain>.<PROXY_BASE_DOMAIN>" on the same port,
+# rather than a path prefix, so upstream apps that emit root-absolute asset
+# paths (e.g. ShotGrid's /dist/...) resolve correctly through the proxy.
+DEFAULT_PROXY_BASE_DOMAIN = "localhost"
+PRODUCTION_TRACKER_SUBDOMAIN = "production-tracker"
 ###########################################################
 
 # LOGGING CONSTANTS

@@ -29,6 +29,19 @@ def filter_hop_headers(headers):
     """"""
     return {k: v for k, v in headers.items() if k.lower() not in CONSTANTS.HOP_BY_HOP_HEADERS}
 
+def force_decodable_accept_encoding(headers):
+    """"""
+    # The browser's Accept-Encoding (e.g. "br, zstd") describes what *it* can
+    # decode, not what this proxy's httpx client can. httpx silently falls
+    # back to identity (no error) when brotli/zstandard aren't installed,
+    # leaving upstream.content still compressed while we forward it as if it
+    # were plain bytes. gzip/deflate decode via stdlib zlib, so they're always
+    # safe regardless of which optional extras are installed.
+    for key in [k for k in headers if k.lower() == "accept-encoding"]:
+        del headers[key]
+    headers["accept-encoding"] = "gzip, deflate"
+    return headers
+
 def patch_upstream_auth_header(headers , application_settings):
     """"""
     if application_settings.upstream_authorization:
@@ -70,8 +83,17 @@ async def query_upstream(url, request , application_settings):
     upstream_query_url = __construct_upstream_url(url, request, application_settings)
     # Get application body and wait for buffered size
     up_stream_body = await buffer_application_body(request, application_settings)
+
+    # headers = dict(request.headers)
+    # headers["host"] = f"{request.headers.get("host", "")}/{application_settings.application_name}"
+    # headers["x-forwarded-host"] = headers["host"]
+    # headers["x-forwarded-proto"] = request.url.scheme
+    # headers["x-forwarded-prefix"] = "/proxy"
+
     # Patch upstream Application auth config in Proxy Header
-    upstream_header = patch_upstream_auth_header(filter_hop_headers(dict(request.headers)), application_settings)
+    upstream_header = force_decodable_accept_encoding(
+        patch_upstream_auth_header(filter_hop_headers(dict(request.headers)), application_settings)
+    )
     # Get Requestor id
     requestor_id = getattr(request.state, "request_id", "-")
 
@@ -113,5 +135,5 @@ async def query_upstream(url, request , application_settings):
         raise ReverseProxyServerUpStreamRequestError(status_code=502, detail="Could not reach the upstream API.") from exc
     except Exception as exc:
         # TODO: Add Log
-        raise ReverseProxyServerUnHandledError(status_code=500, detail="An Un-Handle exception occurred, Please check error info for more.") from exc
+        raise ReverseProxyServerUnHandledError(status_code=500, detail=f"An Un-Handle exception occurred, Please check error info for more. {str(exc)}") from exc
     
