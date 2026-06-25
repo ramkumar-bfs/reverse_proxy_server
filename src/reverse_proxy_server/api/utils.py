@@ -1,4 +1,7 @@
 """"""
+# Default Imports
+import logging
+
 # Local Imports
 from reverse_proxy_server.exceptions import ReverseProxyServerUnHandledError, ReverseProxyServerUpStreamRequestError, ReverseProxyServerTimeoutError, ReverseProxyServerAuthFailed, UpStreamRequestBufferSizeExceededError
 from reverse_proxy_server import constants as CONSTANTS
@@ -7,6 +10,8 @@ from reverse_proxy_server import constants as CONSTANTS
 from fastapi import Response
 import tenacity
 import httpx
+
+LOGGER = logging.getLogger(__name__)
 
 
 # Support Internal functions
@@ -66,11 +71,11 @@ async def query_upstream(url, request , application_settings):
     # Get application body and wait for buffered size
     up_stream_body = await buffer_application_body(request, application_settings)
     # Patch upstream Application auth config in Proxy Header
-    upstream_header = patch_upstream_auth_header(dict(request.headers), application_settings)
+    upstream_header = patch_upstream_auth_header(filter_hop_headers(dict(request.headers)), application_settings)
     # Get Requestor id
     requestor_id = getattr(request.state, "request_id", "-")
 
-    # TODO: Add Log Here with requestor id
+    LOGGER.debug("-> upstream %s %s rid=%s", request.method, upstream_query_url, requestor_id)
 
     try:
         async for attempt in tenacity.AsyncRetrying(
